@@ -1,0 +1,9 @@
+name: CxWar
+version: "${project.version}"
+main: ca.ckay9.CxWar
+api-version: 1.19
+authors: [CKAY9]
+description: "${project.description}"
+commands:
+    reveal:
+        description: Reveal a player's location with your own also being revealed.
