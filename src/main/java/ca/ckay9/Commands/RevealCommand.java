@@ -1,6 +1,7 @@
 package ca.ckay9.Commands;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -9,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import ca.ckay9.Config;
 import ca.ckay9.CxWar;
@@ -66,6 +65,12 @@ public class RevealCommand implements CommandExecutor {
             return false;
         }
 
+        HiddenPlayer target_hidden = this.cx_war.hidden.getHiddenPlayers().get(target_player.getUniqueId());
+        if (target_hidden == null) {
+            target_hidden = new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360));
+            this.cx_war.hidden.addToHiddenPlayers(player.getUniqueId(), target_hidden);
+        }
+
         if (reveal_cooldowns.get(player.getUniqueId()) == null) {
             reveal_cooldowns.put(player.getUniqueId(), 0);
         }
@@ -79,17 +84,39 @@ public class RevealCommand implements CommandExecutor {
         Location player_location = player.getLocation();
         Location target_location = target_player.getLocation();
 
-        // Alert players of target's location    
-        Bukkit.broadcastMessage(Utils.formatText("&9" + target_player.getName() + "'s location has been leaked: " + target_location.getBlockX() + ", " + target_location.getBlockY() + ", " + target_location.getBlockZ()));
-        
-        // Alert server to location of player
-        Bukkit.broadcastMessage(Utils.formatText("&eDue to leaking another player's location, " + player.getName() + " has revealed their own location: " + player_location.getBlockX() + ", " + player_location.getBlockY() + ", " + player_location.getBlockZ()));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * Config.data.getInt("reveal.cooldown", 180), 255));
- 
+        switch (target_hidden.type) {
+            case 0:
+                // No protection, leak position
+                Bukkit.broadcastMessage(
+                        Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
+                                + player.getName() + ": " + target_location.getBlockX() + ", "
+                                + target_location.getBlockY() + ", "
+                                + target_location.getBlockZ()));
+                break;
+            case 1:
+                Random rand = new Random();
+                int x_offset = rand.nextInt(-250, 250);
+                int y_offset = rand.nextInt(-20, 20);
+                int z_offset = rand.nextInt(-250, 250);
+
+                Bukkit.broadcastMessage(
+                        Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
+                                + player.getName() + ": " + (player_location.getBlockX() + x_offset) + ", "
+                                + (player_location.getBlockY() + y_offset) + ", "
+                                + (player_location.getBlockZ() + z_offset)));
+                break;
+            case 2:
+                Bukkit.broadcastMessage(
+                        Utils.formatText("&9" + player.getName()
+                                + " revealed their own position: " + player_location.getBlockX() + ", "
+                                + player_location.getBlockY() + ", " + player_location.getBlockZ()));
+            default:
+                break;
+        }
+
         // Update cooldown
         reveal_cooldowns.put(player.getUniqueId(), Config.data.getInt("reveal.cooldown", 180));
 
-        
         return false;
     }
 

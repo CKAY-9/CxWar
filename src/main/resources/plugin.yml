@@ -7,3 +7,7 @@ description: "${project.description}"
 commands:
     reveal:
         description: Reveal a player's location with your own also being revealed.
+    hidden:
+        description: Hide from reveals using diamonds or netherite
+    group:
+        description: Create, join, or leave groups

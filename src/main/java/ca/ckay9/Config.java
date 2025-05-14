@@ -30,6 +30,18 @@ public class Config {
                 data.set("reveal.cooldown", 180);
             }
 
+            if (!data.isSet("hidden.timer")) {
+                data.set("hidden.timer", 360);
+            }
+
+            if (!data.isSet("hidden.diamonds")) {
+                data.set("hidden.diamonds", 8);
+            }
+
+            if (!data.isSet("hidden.netherite_ingots")) {
+                data.set("hidden.netherite_ingots", 4);
+            }
+
             data.save(data_file);
         } catch (IOException ex) {
             Utils.getPlugin().getLogger().warning(ex.toString());
