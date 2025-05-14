@@ -1,5 +1,6 @@
 package ca.ckay9.Commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -85,35 +86,35 @@ public class HiddenCommand implements CommandExecutor {
     }
 
     private boolean hasEnoughItemsForHidden(Material material, int required_count, Player player) {
-        int item_count = 0;
-        int remaining = required_count;
-        for (ItemStack stack : player.getInventory().getContents()) {
-            if (stack == null || stack.getType() != material) {
-                continue;
-            }
+        ArrayList<Integer> foundIndexes = new ArrayList<>();
+        int currentStackAmount = 0;
+        int itemNum = required_count;
+        int i = 0;
 
-            item_count += stack.getAmount();
-            if (stack.getAmount() - remaining <= 0) {
-                player.getInventory().remove(stack);
-            } else {
-                stack.setAmount(stack.getAmount() - remaining);
+        for (ItemStack it : player.getInventory()) {
+            if (it != null && it.getType() == material) {
+                foundIndexes.add(i);
+                currentStackAmount += it.getAmount();
+                if (currentStackAmount >= itemNum)
+                    break;
             }
-
-            remaining -= Math.max(0, Math.min(item_count, required_count));
-
-            if (item_count >= required_count) {
-                break;
-            }
+            i++;
         }
 
-        if (item_count < required_count) {
-            if (item_count > 0) {
-                player.getInventory().addItem(new ItemStack(material, item_count));
+        if (currentStackAmount >= itemNum) {
+            for (int j = 0; j < foundIndexes.size(); j++) {
+                int index = foundIndexes.get(j);
+                itemNum -= player.getInventory().getItem(index).getAmount();
+                if (itemNum <= 0) {
+                    player.getInventory().getItem(index).setAmount(Math.abs(itemNum));
+                } else {
+                    player.getInventory().getItem(index).setAmount(0);
+                }
             }
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private void startHidden(String[] args, Player player) {
