@@ -5,10 +5,12 @@ import java.util.ArrayList;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.ckay9.Commands.CxWarCommand;
 import ca.ckay9.Commands.GroupCommand;
 import ca.ckay9.Commands.GroupCompleter;
 import ca.ckay9.Commands.HiddenCommand;
 import ca.ckay9.Commands.HiddenCompleter;
+import ca.ckay9.Commands.KillstreakCommand;
 import ca.ckay9.Commands.RevealCommand;
 import ca.ckay9.Listeners.PlayerJoin;
 import ca.ckay9.Listeners.PlayerKill;
@@ -40,6 +42,10 @@ public class CxWar extends JavaPlugin {
         // Killstreaks
         this.killstreaks = new Killstreaks(this);
         this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
+        this.getServer().getPluginCommand("killstreak").setExecutor(new KillstreakCommand(this));
+
+        // Misc
+        this.getServer().getPluginCommand("cxwar").setExecutor(new CxWarCommand());
 
         try {
             int port = 8887;

@@ -11,3 +11,7 @@ commands:
         description: Hide from reveals using diamonds or netherite
     group:
         description: Create, join, or leave groups
+    cxwar:
+        description: Learn about the plugin
+    killstreak:
+        description: View your own or other's killstreak

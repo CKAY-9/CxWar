@@ -5,6 +5,13 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 
 ## Features
 
+### Mechanics
+
+- Reveal: Show a player's location
+- Hidden: Hide from potential reveals
+- Group: Create a group with others
+- Killstreaks: Keep track of how many players you've killed in a life and get rewards (rewards not added yet)
+
 ### Commands
 - `/reveal [target]`: Reveal a target's location with a cooldown
 - `/hidden [start/end] [diamond/netherite]`: Protect yourself from reveals using diamonds and netherite

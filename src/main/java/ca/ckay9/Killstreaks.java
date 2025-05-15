@@ -1,5 +1,6 @@
 package ca.ckay9;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -10,6 +11,13 @@ public class Killstreaks {
     public Killstreaks(CxWar cx_war) {
         this.cx_war = cx_war;
         this.player_killstreaks = new HashMap<>();
+
+        if (Config.data.getConfigurationSection("killstreaks") != null) {
+            for (String uuid : Config.data.getConfigurationSection("killstreaks").getKeys(false)) {
+                UUID converted = UUID.fromString(uuid);
+                player_killstreaks.put(converted, Config.data.getInt("killstreaks." + uuid, 0));
+            }
+        }
     }
 
     public HashMap<UUID, Integer> getPlayerKillstreaks() {
@@ -18,5 +26,12 @@ public class Killstreaks {
 
     public void updatePlayerKillstreaks(UUID player_uuid, int value) {
         this.player_killstreaks.put(player_uuid, value);
+
+        try {
+            Config.data.set("killstreaks." + player_uuid.toString(), value);
+            Config.data.save(Config.data_file);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        } 
     }
 }

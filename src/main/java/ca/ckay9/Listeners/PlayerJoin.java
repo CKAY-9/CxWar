@@ -26,5 +26,9 @@ public class PlayerJoin implements Listener {
         } else {
             Group.resetPlayerNames(player);
         }
+
+        if (this.cx_war.killstreaks.getPlayerKillstreaks().get(player.getUniqueId()) == null) {
+            this.cx_war.killstreaks.updatePlayerKillstreaks(player.getUniqueId(), 0);
+        }
     }
 }
