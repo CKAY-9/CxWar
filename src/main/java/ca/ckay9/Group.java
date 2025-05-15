@@ -29,8 +29,8 @@ public class Group {
 
     public boolean saveGroup() {
         try {
-            String path = "groups." + creator.toString(); 
-            
+            String path = "groups." + creator.toString();
+
             Config.data.set(path + ".name", this.name);
             Config.data.set(path + ".creator", creator.toString());
 
@@ -71,7 +71,7 @@ public class Group {
             if (member_uuid == leaver_uuid) {
                 continue;
             }
-            
+
             Player player = Bukkit.getPlayer(member_uuid);
             if (player == null) {
                 continue;
@@ -85,7 +85,7 @@ public class Group {
     }
 
     public void deleteGroup(UUID owner_uuid, CxWar cx_war) {
-        for (UUID member_uuid : this.members) {            
+        for (UUID member_uuid : this.members) {
             Player player = Bukkit.getPlayer(member_uuid);
             if (player == null) {
                 continue;
@@ -128,12 +128,12 @@ public class Group {
     }
 
     public void setupPlayerForGroup(Player player) {
-        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + player.getName());
+        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + player.getDisplayName());
         player.setDisplayName(formatted);
         player.setCustomName(formatted);
         player.setPlayerListName(formatted);
 
-        for (UUID member_uuid : this.members) {            
+        for (UUID member_uuid : this.members) {
             Player temp = Bukkit.getPlayer(member_uuid);
             if (temp == null || player.getUniqueId() == member_uuid) {
                 continue;
@@ -155,14 +155,25 @@ public class Group {
             String group_path = base_path + group_key;
             String name = Config.data.getString(group_path + ".name");
             UUID creator = UUID.fromString(Config.data.getString(group_path + ".creator"));
-            ArrayList<String> member_strings = new ArrayList<String>(Config.data.getStringList(group_path + ".members"));
+            ArrayList<String> member_strings = new ArrayList<String>(
+                    Config.data.getStringList(group_path + ".members"));
             ArrayList<UUID> members = new ArrayList<>();
             for (String member : member_strings) {
-                members.add(UUID.fromString(member));
+                UUID uuid = UUID.fromString(member);
+                members.add(uuid);
             }
 
             groups.add(new Group(creator, name, members));
-        }   
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Group g = Group.getPlayerGroup(player.getUniqueId(), groups);
+            if (g == null) {
+                Group.resetPlayerNames(player);
+            } else {
+                g.setupPlayerForGroup(player);
+            }
+        }
 
         return groups;
     }
@@ -204,6 +215,5 @@ public class Group {
         player.setDisplayName(name);
         player.setCustomName(name);
         player.setPlayerListName(name);
-
     }
 }

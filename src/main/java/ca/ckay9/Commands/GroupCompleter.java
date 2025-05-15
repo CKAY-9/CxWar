@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -44,10 +45,20 @@ public class GroupCompleter implements TabCompleter {
                 }
                 break;
             case 2:
-                if (args[0].equalsIgnoreCase("create")) {
-                    options.add("name");
-                } else if (args[0].equalsIgnoreCase("join")) {
-                    options.addAll(Group.getGroupsInvitedTo(player.getUniqueId(), this.cx_war.groups));
+                switch (args[0].toLowerCase()) {
+                    case "create":
+                        options.add("name");
+                        break;
+                    case "join":
+                        options.addAll(Group.getGroupsInvitedTo(player.getUniqueId(), this.cx_war.groups));
+                        break;
+                    case "invite":
+                        for (Player temp_player : Bukkit.getOnlinePlayers()) {
+                            options.add(temp_player.getName());
+                        }
+                        break;
+                    default:
+                        break;
                 }
                 break;
             default:

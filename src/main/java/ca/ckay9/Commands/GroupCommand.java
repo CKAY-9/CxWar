@@ -20,6 +20,18 @@ public class GroupCommand implements CommandExecutor {
         this.cx_war = cx_war;
     }
 
+    public String combineArgsForName(String[] args) {
+        StringBuilder builder = new StringBuilder();
+        for (int index = 1; index < args.length; index++) {
+            builder.append(args[index].strip());
+            if (index != args.length - 1) {
+                builder.append(" ");
+            }
+        }
+
+        return builder.toString();
+    }
+
     private void createGroup(Player player, String[] args) {
         if (args.length < 2) {
             player.sendMessage(
@@ -27,7 +39,13 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
-        String name = args[1];
+        String name = combineArgsForName(args);
+        int limit = 15;
+        if (name.length() > limit) {
+            player.sendMessage(
+                    Utils.formatText("&cGroup name must be at most " + limit + " characters long."));
+            return;
+        }
 
         if (Group.getGroupByName(name, this.cx_war.groups) != null) {
             player.sendMessage(
@@ -50,7 +68,7 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
-        String target_group_name = args[1];
+        String target_group_name = combineArgsForName(args);
         Group group = Group.getGroupByName(target_group_name, this.cx_war.groups);
         if (group == null) {
             player.sendMessage(
