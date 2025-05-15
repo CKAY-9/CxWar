@@ -10,11 +10,14 @@ import ca.ckay9.Commands.GroupCompleter;
 import ca.ckay9.Commands.HiddenCommand;
 import ca.ckay9.Commands.HiddenCompleter;
 import ca.ckay9.Commands.RevealCommand;
+import ca.ckay9.Listeners.PlayerJoin;
+import ca.ckay9.Listeners.PlayerKill;
 
 public class CxWar extends JavaPlugin {
     public HiddenCommand hidden;
     public SocketServer socket_server;
     public ArrayList<Group> groups;
+    public Killstreaks killstreaks;
 
     @Override
     public void onEnable() {
@@ -32,6 +35,11 @@ public class CxWar extends JavaPlugin {
         this.groups = Group.loadAllGroups();
         this.getServer().getPluginCommand("group").setExecutor(new GroupCommand(this));
         this.getServer().getPluginCommand("group").setTabCompleter(new GroupCompleter(this));
+        this.getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+
+        // Killstreaks
+        this.killstreaks = new Killstreaks(this);
+        this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
 
         try {
             int port = 8887;
