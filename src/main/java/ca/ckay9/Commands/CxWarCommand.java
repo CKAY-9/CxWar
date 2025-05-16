@@ -15,6 +15,7 @@ public class CxWarCommand implements CommandExecutor {
         sender.sendMessage(Utils.formatText("&e - /hidden: Hide from potential reveals"));
         sender.sendMessage(Utils.formatText("&e - /group: Create a group with others"));
         sender.sendMessage(Utils.formatText("&e - /killstreak: See your own or other's current killstreak"));
+        sender.sendMessage(Utils.formatText("&e - /whisper: Secretly chat with other players"));
 
         return false;
     }

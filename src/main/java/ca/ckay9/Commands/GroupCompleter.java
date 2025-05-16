@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
 import ca.ckay9.Group;
-import ca.ckay9.Utils;
 
 public class GroupCompleter implements TabCompleter {
     private CxWar cx_war;

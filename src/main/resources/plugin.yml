@@ -15,3 +15,5 @@ commands:
         description: Learn about the plugin
     killstreak:
         description: View your own or other's killstreak
+    whisper:
+        description: Secretly chat with other players

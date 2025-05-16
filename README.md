@@ -17,6 +17,7 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 - `/hidden [start/end] [diamond/netherite]`: Protect yourself from reveals using diamonds and netherite
 - `/group [create/join/invite/delete/leave] [name]`: Create, join, leave, etc., groups
 - `/killstreak [target]`: See your own or other's current killstreak
+ - `/whisper [target] [message]`: Secretly chat with other players
 
 ### Websocket Server
 CxWar is also a websocket server to allow for a Discord bot and website interaction.

@@ -12,6 +12,8 @@ import ca.ckay9.Commands.HiddenCommand;
 import ca.ckay9.Commands.HiddenCompleter;
 import ca.ckay9.Commands.KillstreakCommand;
 import ca.ckay9.Commands.RevealCommand;
+import ca.ckay9.Commands.WhisperCommand;
+import ca.ckay9.Commands.WhisperCompleter;
 import ca.ckay9.Listeners.PlayerJoin;
 import ca.ckay9.Listeners.PlayerKill;
 
@@ -43,6 +45,10 @@ public class CxWar extends JavaPlugin {
         this.killstreaks = new Killstreaks(this);
         this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
         this.getServer().getPluginCommand("killstreak").setExecutor(new KillstreakCommand(this));
+
+        // Whispers
+        this.getServer().getPluginCommand("whisper").setExecutor(new WhisperCommand());
+        this.getServer().getPluginCommand("whisper").setTabCompleter(new WhisperCompleter());
 
         // Misc
         this.getServer().getPluginCommand("cxwar").setExecutor(new CxWarCommand());

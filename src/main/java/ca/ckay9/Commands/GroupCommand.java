@@ -20,18 +20,6 @@ public class GroupCommand implements CommandExecutor {
         this.cx_war = cx_war;
     }
 
-    public String combineArgsForName(String[] args) {
-        StringBuilder builder = new StringBuilder();
-        for (int index = 1; index < args.length; index++) {
-            builder.append(args[index].strip());
-            if (index != args.length - 1) {
-                builder.append(" ");
-            }
-        }
-
-        return builder.toString();
-    }
-
     private void createGroup(Player player, String[] args) {
         if (args.length < 2) {
             player.sendMessage(
@@ -39,7 +27,7 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
-        String name = combineArgsForName(args);
+        String name = Utils.combineStringArrayIntoSingle(args, 1);
         int limit = 15;
         if (name.length() > limit) {
             player.sendMessage(
@@ -68,7 +56,7 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
-        String target_group_name = combineArgsForName(args);
+        String target_group_name = Utils.combineStringArrayIntoSingle(args, 1);
         Group group = Group.getGroupByName(target_group_name, this.cx_war.groups);
         if (group == null) {
             player.sendMessage(
