@@ -128,7 +128,7 @@ public class Group {
     }
 
     public void setupPlayerForGroup(Player player) {
-        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + player.getDisplayName());
+        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + player.getName());
         player.setDisplayName(formatted);
         player.setCustomName(formatted);
         player.setPlayerListName(formatted);

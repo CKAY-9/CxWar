@@ -84,21 +84,22 @@ public class RevealCommand implements CommandExecutor {
         Location player_location = player.getLocation();
         Location target_location = target_player.getLocation();
 
+        Random rand = new Random();
+        int offset = Config.data.getInt("reveal.reveal_range", 200);
+        int half_offset = (int)Math.round(offset * 0.5);
+        int x_offset = rand.nextInt(-offset, offset);
+        int y_offset = rand.nextInt(-half_offset, half_offset);
+        int z_offset = rand.nextInt(-offset, offset);
+
         switch (target_hidden.type) {
             case 0:
-                // No protection, leak position
                 Bukkit.broadcastMessage(
                         Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
-                                + player.getName() + ": " + target_location.getBlockX() + ", "
-                                + target_location.getBlockY() + ", "
-                                + target_location.getBlockZ()));
+                                + player.getName() + ": " + (target_location.getBlockX() + x_offset) + ", "
+                                + (target_location.getBlockY() + y_offset) + ", "
+                                + (target_location.getBlockZ() + z_offset)));
                 break;
             case 1:
-                Random rand = new Random();
-                int x_offset = rand.nextInt(-250, 250);
-                int y_offset = rand.nextInt(-20, 20);
-                int z_offset = rand.nextInt(-250, 250);
-
                 Bukkit.broadcastMessage(
                         Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
                                 + player.getName() + ": " + (player_location.getBlockX() + x_offset) + ", "

@@ -42,6 +42,11 @@ public class Config {
                 data.set("hidden.netherite_ingots", 4);
             }
 
+            if (!data.isSet("reveal.reveal_range")) {
+                data.set("reveal.reveal_range", 200);
+            }
+
+
             data.save(data_file);
         } catch (IOException ex) {
             Utils.getPlugin().getLogger().warning(ex.toString());
