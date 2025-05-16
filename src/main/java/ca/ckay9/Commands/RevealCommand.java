@@ -90,7 +90,7 @@ public class RevealCommand implements CommandExecutor {
         if ((required_chance / 100) <= random_roll) {
             player.sendMessage(
                     Utils.formatText("&cReveal roll failed: Required: &c&l" + (int)(100 - required_chance) + "&r&c, Rolled: &c&l"
-                            + (100 - (int) Math.round(random_roll * 100))));
+                            + (100 - (int) Math.floor(random_roll * 100))));
             reveal_cooldowns.put(player.getUniqueId(), Config.data.getInt("reveal.cooldown", 180));
 
             return false;
