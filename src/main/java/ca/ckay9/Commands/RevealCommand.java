@@ -87,8 +87,7 @@ public class RevealCommand implements CommandExecutor {
         Random rand = new Random();
         double required_chance = Config.data.getDouble("reveal.random_chance", 25);
         double random_roll = rand.nextDouble();
-        cx_war.getLogger().info((required_chance / 100) + " " + random_roll);
-        if ((required_chance / 100) < random_roll) {
+        if ((required_chance / 100) <= random_roll) {
             player.sendMessage(
                     Utils.formatText("&cReveal roll failed: Required: &c&l" + (int)(100 - required_chance) + "&r&c, Rolled: &c&l"
                             + (100 - (int) Math.round(random_roll * 100))));
