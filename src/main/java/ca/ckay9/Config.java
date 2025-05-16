@@ -46,6 +46,9 @@ public class Config {
                 data.set("reveal.reveal_range", 200);
             }
 
+            if (!data.isSet("reveal.random_chance")) {
+                data.set("reveal.random_chance", 25);
+            }
 
             data.save(data_file);
         } catch (IOException ex) {
