@@ -95,7 +95,7 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
-        if (group.creator == player.getUniqueId()) {
+        if (player.getUniqueId().equals(group.creator)) {
             player.sendMessage(
                     Utils.formatText("&cYou can't leave your own group: /group delete"));
             return;
@@ -107,7 +107,7 @@ public class GroupCommand implements CommandExecutor {
     }
 
     private void deleteGroup(Player player, Group group) {
-        if (player.getUniqueId() != group.creator) {
+        if (!player.getUniqueId().equals(group.creator)) {
             player.sendMessage(
                     Utils.formatText("&cOnly group owners can delete groups."));
             return;
@@ -118,7 +118,7 @@ public class GroupCommand implements CommandExecutor {
     }
 
     private void inviteToGroup(Player player, Group group, String[] args) {
-        if (player.getUniqueId() != group.creator) {
+        if (!player.getUniqueId().equals(group.creator)) {
             player.sendMessage(
                     Utils.formatText("&cOnly group owners can invite players."));
             return;
@@ -196,7 +196,7 @@ public class GroupCommand implements CommandExecutor {
                 deleteGroup(player, current_group);
                 break;
             case "invite":
-                if (current_group == null || current_group.creator != player.getUniqueId()) {
+                if (current_group == null || !current_group.creator.equals(player.getUniqueId())) {
                     player.sendMessage(Utils.formatText("&cYou aren't the owner of a group."));
                     return false;
                 }

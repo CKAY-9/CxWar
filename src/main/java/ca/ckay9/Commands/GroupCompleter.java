@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
 import ca.ckay9.Group;
+import ca.ckay9.Utils;
 
 public class GroupCompleter implements TabCompleter {
     private CxWar cx_war;
@@ -25,18 +26,18 @@ public class GroupCompleter implements TabCompleter {
         if (!(sender instanceof Player)) {
             return Collections.emptyList();
         }
-        
-        Player player = (Player)sender;
+
+        Player player = (Player) sender;
         ArrayList<String> options = new ArrayList<>();
         Group current_group = Group.getPlayerGroup(player.getUniqueId(), this.cx_war.groups);
-        
+
         switch (args.length) {
             case 1:
                 if (current_group == null) {
                     options.add("create");
                     options.add("join");
                 } else {
-                    if (current_group.creator == player.getUniqueId()) {
+                    if (current_group.creator.equals(player.getUniqueId())) {
                         options.add("delete");
                         options.add("invite");
                     } else {
@@ -64,8 +65,8 @@ public class GroupCompleter implements TabCompleter {
             default:
                 break;
         }
-        
+
         return options;
     }
-    
+
 }

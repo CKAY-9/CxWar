@@ -180,7 +180,6 @@ public class Group {
 
     public static Group getPlayerGroup(UUID player_uuid, ArrayList<Group> groups) {
         for (Group group : groups) {
-            Utils.getPlugin().getLogger().info(group.name);
             if (group.isPlayerInGroup(player_uuid)) {
                 return group;
             }
