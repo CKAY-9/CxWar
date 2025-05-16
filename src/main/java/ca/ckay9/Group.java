@@ -119,7 +119,7 @@ public class Group {
 
     public boolean isPlayerInGroup(UUID player_uuid) {
         for (UUID uuid : this.members) {
-            if (uuid == player_uuid) {
+            if (uuid.equals(player_uuid)) {
                 return true;
             }
         }
@@ -135,7 +135,7 @@ public class Group {
 
         for (UUID member_uuid : this.members) {
             Player temp = Bukkit.getPlayer(member_uuid);
-            if (temp == null || player.getUniqueId() == member_uuid) {
+            if (temp == null || player.getUniqueId().equals(member_uuid)) {
                 continue;
             }
 
@@ -180,6 +180,7 @@ public class Group {
 
     public static Group getPlayerGroup(UUID player_uuid, ArrayList<Group> groups) {
         for (Group group : groups) {
+            Utils.getPlugin().getLogger().info(group.name);
             if (group.isPlayerInGroup(player_uuid)) {
                 return group;
             }
