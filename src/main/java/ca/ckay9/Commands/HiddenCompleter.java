@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import ca.ckay9.Config;
+import ca.ckay9.Storage;
 import ca.ckay9.CxWar;
 
 public class HiddenCompleter implements TabCompleter {
@@ -28,7 +28,7 @@ public class HiddenCompleter implements TabCompleter {
         Player player = (Player)sender;
         HiddenPlayer hidden_player = cx_war.hidden.getHiddenPlayers().get(player.getUniqueId());
         if (hidden_player == null) {
-            hidden_player = new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360));
+            hidden_player = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
             cx_war.hidden.addToHiddenPlayers(player.getUniqueId(), hidden_player);
         }
         

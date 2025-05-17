@@ -31,15 +31,15 @@ public class Group {
         try {
             String path = "groups." + creator.toString();
 
-            Config.data.set(path + ".name", this.name);
-            Config.data.set(path + ".creator", creator.toString());
+            Storage.data.set(path + ".name", this.name);
+            Storage.data.set(path + ".creator", creator.toString());
 
             ArrayList<String> string_uuids = new ArrayList<>();
             for (UUID uuid : this.members) {
                 string_uuids.add(uuid.toString());
             }
-            Config.data.set(path + ".members", string_uuids.subList(0, string_uuids.size()));
-            Config.data.save(Config.data_file);
+            Storage.data.set(path + ".members", string_uuids.subList(0, string_uuids.size()));
+            Storage.data.save(Storage.data_file);
 
             return true;
         } catch (IOException ex) {
@@ -100,8 +100,8 @@ public class Group {
         cx_war.groups.remove(this);
 
         try {
-            Config.data.set("groups." + owner_uuid, null);
-            Config.data.save(Config.data_file);
+            Storage.data.set("groups." + owner_uuid, null);
+            Storage.data.save(Storage.data_file);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -147,16 +147,16 @@ public class Group {
         String base_path = "groups.";
         ArrayList<Group> groups = new ArrayList<>();
 
-        if (Config.data.getConfigurationSection(base_path) == null) {
+        if (Storage.data.getConfigurationSection(base_path) == null) {
             return groups;
         }
 
-        for (String group_key : Config.data.getConfigurationSection(base_path).getKeys(false)) {
+        for (String group_key : Storage.data.getConfigurationSection(base_path).getKeys(false)) {
             String group_path = base_path + group_key;
-            String name = Config.data.getString(group_path + ".name");
-            UUID creator = UUID.fromString(Config.data.getString(group_path + ".creator"));
+            String name = Storage.data.getString(group_path + ".name");
+            UUID creator = UUID.fromString(Storage.data.getString(group_path + ".creator"));
             ArrayList<String> member_strings = new ArrayList<String>(
-                    Config.data.getStringList(group_path + ".members"));
+                    Storage.data.getStringList(group_path + ".members"));
             ArrayList<UUID> members = new ArrayList<>();
             for (String member : member_strings) {
                 UUID uuid = UUID.fromString(member);

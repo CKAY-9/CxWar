@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import ca.ckay9.Config;
+import ca.ckay9.Storage;
 import ca.ckay9.CxWar;
 import ca.ckay9.Utils;
 
@@ -25,7 +25,7 @@ public class HiddenCommand implements CommandExecutor {
         this.hidden_players = new HashMap<>();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
-            this.hidden_players.put(p.getUniqueId(), new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360)));
+            this.hidden_players.put(p.getUniqueId(), new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360)));
         }
 
         cx_war.getServer().getScheduler().scheduleSyncRepeatingTask(cx_war, new Runnable() {
@@ -35,7 +35,7 @@ public class HiddenCommand implements CommandExecutor {
                     HiddenPlayer hidden_player = hidden_players.get(player.getUniqueId());
                     if (hidden_player == null) {
                         hidden_players.put(player.getUniqueId(),
-                                new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360)));
+                                new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360)));
                         continue;
                     }
 
@@ -50,31 +50,34 @@ public class HiddenCommand implements CommandExecutor {
 
                     switch (hidden_player.type) {
                         case 1:
-                            if (!hasEnoughItemsForHidden(Material.DIAMOND, Config.data.getInt("hidden.diamonds"),
+                            int required_diamonds = Storage.config.getInt("hidden.diamonds", 8);
+                            if (!hasEnoughItemsForHidden(Material.DIAMOND, required_diamonds,
                                     player)) {
                                 player.sendMessage(Utils.formatText("&cYou need "
-                                        + Config.data.getInt("hidden.diamonds") + " diamonds to be hidden."));
+                                        + required_diamonds + " diamonds to be hidden."));
                                 endHidden(player);
                                 return;
                             }
 
+                            hidden_player.timer = Storage.config.getInt("hidden.timer", 360);
                             player.sendMessage(Utils.formatText("&aYou're hidden has renewed for "
-                                    + Config.data.getInt("hidden.diamonds") + " diamonds."));
+                                    + required_diamonds + " diamonds."));
                             break;
                         case 2:
+                            int required_netherite = Storage.config.getInt("hidden.netherite_ingots", 4);
                             if (!hasEnoughItemsForHidden(Material.NETHERITE_INGOT,
-                                    Config.data.getInt("hidden.netherite_ingots"),
+                                    required_netherite,
                                     player)) {
                                 player.sendMessage(
-                                        Utils.formatText("&cYou need " + Config.data.getInt("hidden.netherite_ingots")
+                                        Utils.formatText("&cYou need " + required_netherite
                                                 + " netherite ingots to be hidden."));
                                 endHidden(player);
                                 return;
                             }
 
-                            hidden_player.timer = Config.data.getInt("hidden.timer", 360);
+                            hidden_player.timer = Storage.config.getInt("hidden.timer", 360);
                             player.sendMessage(Utils.formatText("&aYou're hidden has renewed for "
-                                    + Config.data.getInt("hidden.netherite_ingots") + " diamonds."));
+                                    + required_netherite + " diamonds."));
                             break;
                         default:
                             break;
@@ -120,7 +123,7 @@ public class HiddenCommand implements CommandExecutor {
     private void startHidden(String[] args, Player player) {
         HiddenPlayer hidden_player = this.hidden_players.get(player.getUniqueId());
         if (hidden_player == null) {
-            hidden_player = new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360));
+            hidden_player = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
             this.hidden_players.put(player.getUniqueId(), hidden_player);
         }
 
@@ -139,9 +142,9 @@ public class HiddenCommand implements CommandExecutor {
         String hidden_type = args[1];
         switch (hidden_type.strip().toLowerCase()) {
             case "diamond":
-                if (!hasEnoughItemsForHidden(Material.DIAMOND, Config.data.getInt("hidden.diamonds"), player)) {
+                if (!hasEnoughItemsForHidden(Material.DIAMOND, Storage.config.getInt("hidden.diamonds"), player)) {
                     player.sendMessage(Utils.formatText(
-                            "&cYou need " + Config.data.getInt("hidden.diamonds") + " diamonds to be hidden."));
+                            "&cYou need " + Storage.config.getInt("hidden.diamonds") + " diamonds to be hidden."));
                     return;
                 }
                 player.sendMessage(
@@ -149,9 +152,9 @@ public class HiddenCommand implements CommandExecutor {
                 hidden_player.type = 1;
                 break;
             case "netherite":
-                if (!hasEnoughItemsForHidden(Material.NETHERITE_INGOT, Config.data.getInt("hidden.netherite_ingots"),
+                if (!hasEnoughItemsForHidden(Material.NETHERITE_INGOT, Storage.config.getInt("hidden.netherite_ingots"),
                         player)) {
-                    player.sendMessage(Utils.formatText("&cYou need " + Config.data.getInt("hidden.netherite_ingots")
+                    player.sendMessage(Utils.formatText("&cYou need " + Storage.config.getInt("hidden.netherite_ingots")
                             + " netherite ingots to be hidden."));
                     return;
                 }
@@ -168,7 +171,7 @@ public class HiddenCommand implements CommandExecutor {
     private void endHidden(Player player) {
         HiddenPlayer hidden_player = this.hidden_players.get(player.getUniqueId());
         if (hidden_player == null) {
-            hidden_player = new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360));
+            hidden_player = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
             this.hidden_players.put(player.getUniqueId(), hidden_player);
         }
 
@@ -178,7 +181,7 @@ public class HiddenCommand implements CommandExecutor {
         }
 
         hidden_player.type = 0;
-        hidden_player.timer = Config.data.getInt("hidden.timer", 360);
+        hidden_player.timer = Storage.config.getInt("hidden.timer", 360);
         player.sendMessage(Utils.formatText("&aYou're hidden has ended."));
     }
 

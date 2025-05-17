@@ -1,6 +1,7 @@
 package ca.ckay9.Commands;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import ca.ckay9.Config;
+import ca.ckay9.Storage;
 import ca.ckay9.CxWar;
 import ca.ckay9.Utils;
 
@@ -67,7 +68,7 @@ public class RevealCommand implements CommandExecutor {
 
         HiddenPlayer target_hidden = this.cx_war.hidden.getHiddenPlayers().get(target_player.getUniqueId());
         if (target_hidden == null) {
-            target_hidden = new HiddenPlayer(0, Config.data.getInt("hidden.timer", 360));
+            target_hidden = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
             this.cx_war.hidden.addToHiddenPlayers(player.getUniqueId(), target_hidden);
         }
 
@@ -85,18 +86,19 @@ public class RevealCommand implements CommandExecutor {
         Location target_location = target_player.getLocation();
 
         Random rand = new Random();
-        double required_chance = Config.data.getDouble("reveal.random_chance", 25);
+        double required_chance = Storage.config.getDouble("reveal.random_chance", 25);
         double random_roll = rand.nextDouble();
         if ((required_chance / 100) <= random_roll) {
             player.sendMessage(
-                    Utils.formatText("&cReveal roll failed: Required: &c&l" + (int)(100 - required_chance) + "&r&c, Rolled: &c&l"
+                    Utils.formatText("&cReveal roll failed: Required: &c&l" + (int) (100 - required_chance)
+                            + "&r&c, Rolled: &c&l"
                             + (100 - (int) Math.floor(random_roll * 100))));
-            reveal_cooldowns.put(player.getUniqueId(), Config.data.getInt("reveal.cooldown", 180));
+            reveal_cooldowns.put(player.getUniqueId(), Storage.config.getInt("reveal.cooldown", 180));
 
             return false;
         }
 
-        int offset = Config.data.getInt("reveal.reveal_range", 200);
+        int offset = Storage.config.getInt("reveal.reveal_range", 200);
         int half_offset = (int) Math.round(offset * 0.5);
         int x_offset = rand.nextInt(-offset, offset);
         int y_offset = rand.nextInt(-half_offset, half_offset);
@@ -127,7 +129,7 @@ public class RevealCommand implements CommandExecutor {
         }
 
         // Update cooldown
-        reveal_cooldowns.put(player.getUniqueId(), Config.data.getInt("reveal.cooldown", 180));
+        reveal_cooldowns.put(player.getUniqueId(), Storage.config.getInt("reveal.cooldown", 180));
 
         return false;
     }

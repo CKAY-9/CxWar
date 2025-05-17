@@ -16,6 +16,7 @@ import ca.ckay9.Commands.WhisperCommand;
 import ca.ckay9.Commands.WhisperCompleter;
 import ca.ckay9.Listeners.PlayerJoin;
 import ca.ckay9.Listeners.PlayerKill;
+import ca.ckay9.Listeners.PlayerLeave;
 
 public class CxWar extends JavaPlugin {
     public HiddenCommand hidden;
@@ -25,10 +26,11 @@ public class CxWar extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Config.initializeData();
+        Storage.initializeData();
 
         // Reveal
         this.getServer().getPluginCommand("reveal").setExecutor(new RevealCommand(this));
+        this.getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
 
         // Hidden
         this.hidden = new HiddenCommand(this);

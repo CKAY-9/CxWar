@@ -12,10 +12,10 @@ public class Killstreaks {
         this.cx_war = cx_war;
         this.player_killstreaks = new HashMap<>();
 
-        if (Config.data.getConfigurationSection("killstreaks") != null) {
-            for (String uuid : Config.data.getConfigurationSection("killstreaks").getKeys(false)) {
+        if (Storage.data.getConfigurationSection("killstreaks") != null) {
+            for (String uuid : Storage.data.getConfigurationSection("killstreaks").getKeys(false)) {
                 UUID converted = UUID.fromString(uuid);
-                player_killstreaks.put(converted, Config.data.getInt("killstreaks." + uuid, 0));
+                player_killstreaks.put(converted, Storage.data.getInt("killstreaks." + uuid, 0));
             }
         }
     }
@@ -28,8 +28,8 @@ public class Killstreaks {
         this.player_killstreaks.put(player_uuid, value);
 
         try {
-            Config.data.set("killstreaks." + player_uuid.toString(), value);
-            Config.data.save(Config.data_file);
+            Storage.data.set("killstreaks." + player_uuid.toString(), value);
+            Storage.data.save(Storage.data_file);
         } catch (IOException exception) {
             exception.printStackTrace();
         } 
