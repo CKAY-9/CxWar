@@ -17,3 +17,7 @@ commands:
         description: View your own or other's killstreak
     whisper:
         description: Secretly chat with other players
+    tpr:
+        description: Request to teleport to someone
+    tpa:
+        description: Accept a teleport request from someone

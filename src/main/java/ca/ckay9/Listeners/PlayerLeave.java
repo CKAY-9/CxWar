@@ -9,13 +9,24 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import ca.ckay9.CxWar;
 import ca.ckay9.Storage;
 
 public class PlayerLeave implements Listener {
+    private CxWar cx_war;
+
+    public PlayerLeave(CxWar cx_war) {
+        this.cx_war = cx_war;
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        if (this.cx_war.teleports.requests.get(player.getUniqueId()) != null) {
+            this.cx_war.teleports.requests.remove(player.getUniqueId());
+        }
+        
         try {
             Location loc = player.getLocation();
             Storage.data.set("logoff_locations." + player.getUniqueId() + ".name", player.getName());

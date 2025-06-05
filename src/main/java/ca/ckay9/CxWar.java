@@ -12,6 +12,9 @@ import ca.ckay9.Commands.HiddenCommand;
 import ca.ckay9.Commands.HiddenCompleter;
 import ca.ckay9.Commands.KillstreakCommand;
 import ca.ckay9.Commands.RevealCommand;
+import ca.ckay9.Commands.TPACommand;
+import ca.ckay9.Commands.TPACompleter;
+import ca.ckay9.Commands.TPRCommand;
 import ca.ckay9.Commands.WhisperCommand;
 import ca.ckay9.Commands.WhisperCompleter;
 import ca.ckay9.Listeners.PlayerJoin;
@@ -23,14 +26,21 @@ public class CxWar extends JavaPlugin {
     public SocketServer socket_server;
     public ArrayList<Group> groups;
     public Killstreaks killstreaks;
+    public Teleports teleports;
 
     @Override
     public void onEnable() {
         Storage.initializeData();
 
+        // Teleports
+        this.teleports = new Teleports(this);
+        this.getServer().getPluginCommand("tpr").setExecutor(new TPRCommand(this));
+        this.getServer().getPluginCommand("tpa").setExecutor(new TPACommand(this));
+        this.getServer().getPluginCommand("tpa").setTabCompleter(new TPACompleter(this));
+
         // Reveal
         this.getServer().getPluginCommand("reveal").setExecutor(new RevealCommand(this));
-        this.getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
 
         // Hidden
         this.hidden = new HiddenCommand(this);
