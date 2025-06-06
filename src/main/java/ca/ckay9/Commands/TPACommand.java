@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Teleports;
 import ca.ckay9.Utils;
 
 public class TPACommand implements CommandExecutor{
@@ -46,6 +47,12 @@ public class TPACommand implements CommandExecutor{
         if (target_player == null) {
             player.sendMessage(
                     Utils.formatText("&cUnable to find target player"));
+            return false;
+        }
+
+        if (!Teleports.playerHasNoPlayersInRadius(target_player, this.cx_war)) {
+            player.sendMessage(
+                    Utils.formatText("&cCan't accept teleport while they are near other players!"));
             return false;
         }
 

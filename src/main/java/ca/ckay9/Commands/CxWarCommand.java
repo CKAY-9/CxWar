@@ -10,7 +10,7 @@ public class CxWarCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage(Utils.formatText("&9&lCxWar by CKAY9 - v1.0.0"));
+        sender.sendMessage(Utils.formatText("&9&lCxWar by CKAY9 - " + Utils.getPlugin().getDescription().getVersion()));
         sender.sendMessage(Utils.formatText("&e - /reveal: Reveal a player's location"));
         sender.sendMessage(Utils.formatText("&e - /hidden: Hide from potential reveals"));
         sender.sendMessage(Utils.formatText("&e - /group: Create a group with others"));

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Teleports;
 import ca.ckay9.Utils;
 
 public class TPRCommand implements CommandExecutor {
@@ -29,6 +30,12 @@ public class TPRCommand implements CommandExecutor {
             return false;
         }
 
+        if (!Teleports.playerHasNoPlayersInRadius(player, this.cx_war)) {
+            player.sendMessage(
+                    Utils.formatText("&cCan't teleport while a player is near you!"));
+            return false;
+        }
+        
         Integer personal_combat_log = this.cx_war.teleports.combat_logs.get(player.getUniqueId());
         if (personal_combat_log != null && personal_combat_log > 1) {
             player.sendMessage(

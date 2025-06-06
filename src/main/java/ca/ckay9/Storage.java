@@ -67,6 +67,10 @@ public class Storage {
                 config.set("tp.combat_log_time", 300);
             }
 
+            if (!config.isSet("tp.player_radius")) {
+                config.set("tp.player_radius", 10);
+            }
+
             config.save(config_file);
             data.save(data_file);
         } catch (IOException ex) {
