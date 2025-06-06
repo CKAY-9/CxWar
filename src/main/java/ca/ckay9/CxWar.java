@@ -17,6 +17,7 @@ import ca.ckay9.Commands.TPACompleter;
 import ca.ckay9.Commands.TPRCommand;
 import ca.ckay9.Commands.WhisperCommand;
 import ca.ckay9.Commands.WhisperCompleter;
+import ca.ckay9.Listeners.PlayerDamage;
 import ca.ckay9.Listeners.PlayerJoin;
 import ca.ckay9.Listeners.PlayerKill;
 import ca.ckay9.Listeners.PlayerLeave;
@@ -34,6 +35,7 @@ public class CxWar extends JavaPlugin {
 
         // Teleports
         this.teleports = new Teleports(this);
+        this.getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
         this.getServer().getPluginCommand("tpr").setExecutor(new TPRCommand(this));
         this.getServer().getPluginCommand("tpa").setExecutor(new TPACommand(this));
         this.getServer().getPluginCommand("tpa").setTabCompleter(new TPACompleter(this));

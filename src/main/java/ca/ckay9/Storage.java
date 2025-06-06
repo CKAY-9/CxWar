@@ -63,6 +63,10 @@ public class Storage {
                 config.set("reveal.random_chance", 25);
             }
 
+            if (!config.isSet("tp.combat_log_time")) {
+                config.set("tp.combat_log_time", 300);
+            }
+
             config.save(config_file);
             data.save(data_file);
         } catch (IOException ex) {

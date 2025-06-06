@@ -29,12 +29,32 @@ public class TPRCommand implements CommandExecutor {
             return false;
         }
 
+        Integer personal_combat_log = this.cx_war.teleports.combat_logs.get(player.getUniqueId());
+        if (personal_combat_log != null && personal_combat_log > 1) {
+            player.sendMessage(
+                    Utils.formatText("&cCombat logged for &c&l" + personal_combat_log + "s"));
+            return false;
+        } else {
+            this.cx_war.teleports.combat_logs.put(player.getUniqueId(), 0);
+        }
+
         String target_name = args[0];
         Player target_player = Bukkit.getPlayerExact(target_name);
         if (target_player == null) {
             player.sendMessage(
                     Utils.formatText("&cUnable to find target player"));
             return false;
+        }
+
+
+        Integer target_combat_log = this.cx_war.teleports.combat_logs.get(target_player.getUniqueId());
+        if (target_combat_log != null && target_combat_log > 1) {
+            player.sendMessage(
+                Utils.formatText("&cTarget is combat logged for &c&l" + target_combat_log + "s"));
+
+            return false;
+        } else {
+            this.cx_war.teleports.combat_logs.put(target_player.getUniqueId(), 0);
         }
 
         this.cx_war.teleports.requests.put(player.getUniqueId(), target_player.getUniqueId());
