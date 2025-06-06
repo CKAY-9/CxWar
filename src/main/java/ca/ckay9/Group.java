@@ -3,6 +3,7 @@ package ca.ckay9;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -128,7 +129,9 @@ public class Group {
     }
 
     public void setupPlayerForGroup(Player player) {
-        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + player.getName());
+        String regex = Pattern.quote(Utils.formatText("&6&l[")) + ".*?" + Pattern.quote(Utils.formatText("]&r "));
+        String display_name = player.getDisplayName().replaceAll(regex, "").trim();
+        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + display_name);
         player.setDisplayName(formatted);
         player.setCustomName(formatted);
         player.setPlayerListName(formatted);
@@ -210,10 +213,11 @@ public class Group {
     }
 
     public static void resetPlayerNames(Player player) {
-        String name = player.getName();
+        String regex = Pattern.quote(Utils.formatText("&6&l[")) + ".*?" + Pattern.quote(Utils.formatText("]&r "));
+        String display_name = player.getDisplayName().replaceAll(regex, "").trim();
 
-        player.setDisplayName(name);
-        player.setCustomName(name);
-        player.setPlayerListName(name);
+        player.setDisplayName(display_name);
+        player.setCustomName(display_name);
+        player.setPlayerListName(display_name);
     }
 }
