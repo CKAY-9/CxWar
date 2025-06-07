@@ -71,6 +71,14 @@ public class Storage {
                 config.set("tp.player_radius", 10);
             }
 
+            if (!config.isSet("death.timeout_on_death")) {
+                config.set("death.timeout_on_death", true);
+            }
+
+            if (!config.isSet("death.timeout_duration")) {
+                config.set("death.timeout_duration", 300);
+            }
+
             config.save(config_file);
             data.save(data_file);
         } catch (IOException ex) {

@@ -13,9 +13,14 @@ public class Group {
     public ArrayList<UUID> members;
     public ArrayList<UUID> invites;
     public UUID creator;
+    public static String[] possible_colors = {
+            "&6", "&1", "&9", "&a", "&c", "&e", "&5", "&0", "&f"
+    };
+    public String color = "&6";
 
-    public Group(UUID creator, String name, ArrayList<UUID> uuids) {
+    public Group(UUID creator, String name, ArrayList<UUID> uuids, String color) {
         this.name = name;
+        this.color = color;
         this.invites = new ArrayList<>();
         this.creator = creator;
         if (uuids.size() == 0 || uuids == null) {
@@ -34,6 +39,7 @@ public class Group {
 
             Storage.data.set(path + ".name", this.name);
             Storage.data.set(path + ".creator", creator.toString());
+            Storage.data.set(path + ".color", color);
 
             ArrayList<String> string_uuids = new ArrayList<>();
             for (UUID uuid : this.members) {
@@ -129,9 +135,10 @@ public class Group {
     }
 
     public void setupPlayerForGroup(Player player) {
-        String regex = Pattern.quote(Utils.formatText("&6&l[")) + ".*?" + Pattern.quote(Utils.formatText("]&r "));
+        String regex = Pattern.quote(Utils.formatText(this.color + "&l[")) + ".*?"
+                + Pattern.quote(Utils.formatText("]&r "));
         String display_name = player.getDisplayName().replaceAll(regex, "").trim();
-        String formatted = Utils.formatText("&6&l[" + this.name + "]&r " + display_name);
+        String formatted = Utils.formatText(this.color + "&l[" + this.name + "]&r " + display_name);
         player.setDisplayName(formatted);
         player.setCustomName(formatted);
         player.setPlayerListName(formatted);
@@ -156,7 +163,8 @@ public class Group {
 
         for (String group_key : Storage.data.getConfigurationSection(base_path).getKeys(false)) {
             String group_path = base_path + group_key;
-            String name = Storage.data.getString(group_path + ".name");
+            String name = Storage.data.getString(group_path + ".name", "InvalidGroup");
+            String color = Storage.data.getString(group_path + ".color", "&6");
             UUID creator = UUID.fromString(Storage.data.getString(group_path + ".creator"));
             ArrayList<String> member_strings = new ArrayList<String>(
                     Storage.data.getStringList(group_path + ".members"));
@@ -166,7 +174,7 @@ public class Group {
                 members.add(uuid);
             }
 
-            groups.add(new Group(creator, name, members));
+            groups.add(new Group(creator, name, members, color));
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -213,7 +221,7 @@ public class Group {
     }
 
     public static void resetPlayerNames(Player player) {
-        String regex = Pattern.quote(Utils.formatText("&6&l[")) + ".*?" + Pattern.quote(Utils.formatText("]&r "));
+        String regex = "§[0-9a-fA-F]§l\\[.*?\\]" + Pattern.quote(Utils.formatText("§r "));
         String display_name = player.getDisplayName().replaceAll(regex, "").trim();
 
         player.setDisplayName(display_name);

@@ -1,7 +1,7 @@
 name: CxWar
 version: "${project.version}"
 main: ca.ckay9.CxWar
-api-version: 1.19
+api-version: 1.21
 authors: [CKAY9]
 description: "${project.description}"
 commands:

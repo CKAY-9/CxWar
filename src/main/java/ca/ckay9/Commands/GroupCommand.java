@@ -1,6 +1,7 @@
 package ca.ckay9.Commands;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -42,8 +43,10 @@ public class GroupCommand implements CommandExecutor {
         }
 
         ArrayList<UUID> uuids = new ArrayList<>();
+        Random random = new Random();
+        String random_color = Group.possible_colors[random.nextInt(Group.possible_colors.length)];
         uuids.add(player.getUniqueId());
-        Group new_group = new Group(player.getUniqueId(), name, uuids);
+        Group new_group = new Group(player.getUniqueId(), name, uuids, random_color);
         new_group.setupPlayerForGroup(player);
         this.cx_war.groups.add(new_group);
         player.sendMessage(Utils.formatText("&aCreated new group: " + name));

@@ -42,19 +42,17 @@ public class Teleports {
             if (other_player.getUniqueId().equals(player.getUniqueId())) {
                 continue;
             }
-            
+
             if (group != null && group.isPlayerInGroup(other_player.getUniqueId())) {
                 continue;
             }
 
             Location other_location = other_player.getLocation();
             // a^2 + b^2 + c^2 = d^2
-            int distance = (int)Math.round(Math.sqrt(
-                Math.pow(location.getBlockX() + other_location.getBlockX(), 2) +
-                Math.pow(location.getBlockY() + other_location.getBlockY(), 2) +
-                Math.pow(location.getBlockZ() + other_location.getBlockZ(), 2)
-            ));
-            if (distance <= max_distance) {
+            double distance = Math.pow(location.getBlockX() - other_location.getBlockX(), 2) +
+                    Math.pow(location.getBlockY() - other_location.getBlockY(), 2) +
+                    Math.pow(location.getBlockZ() - other_location.getBlockZ(), 2);
+            if (distance <= max_distance * max_distance) {
                 return false;
             }
         }

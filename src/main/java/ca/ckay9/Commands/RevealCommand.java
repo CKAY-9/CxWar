@@ -106,22 +106,22 @@ public class RevealCommand implements CommandExecutor {
         switch (target_hidden.type) {
             case 0:
                 Bukkit.broadcastMessage(
-                        Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
-                                + player.getName() + ": " + (target_location.getBlockX() + x_offset) + ", "
+                        Utils.formatText("&9&l" + target_player.getName() + "&r&9's location has been leaked by &9&l"
+                                + player.getName() + "&r&9: &9&l" + (target_location.getBlockX() + x_offset) + ", "
                                 + (target_location.getBlockY() + y_offset) + ", "
                                 + (target_location.getBlockZ() + z_offset)));
                 break;
             case 1:
                 Bukkit.broadcastMessage(
-                        Utils.formatText("&9" + target_player.getName() + "'s location has been leaked by "
-                                + player.getName() + ": " + (player_location.getBlockX() + x_offset) + ", "
+                        Utils.formatText("&9&l" + target_player.getName() + "&r&9's location has been leaked by &9&l"
+                                + player.getName() + "&r&9: &9&l" + (player_location.getBlockX() + x_offset) + ", "
                                 + (player_location.getBlockY() + y_offset) + ", "
                                 + (player_location.getBlockZ() + z_offset)));
                 break;
             case 2:
                 Bukkit.broadcastMessage(
-                        Utils.formatText("&9" + player.getName()
-                                + " revealed their own position: " + player_location.getBlockX() + ", "
+                        Utils.formatText("&9&l" + player.getName()
+                                + " &r&9revealed their own position: &9&l" + player_location.getBlockX() + ", "
                                 + player_location.getBlockY() + ", " + player_location.getBlockZ()));
             default:
                 break;
