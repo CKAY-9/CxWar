@@ -23,3 +23,12 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 - `/whisper [target] [message]`: Secretly chat with other players
 - `/tpr [target]`: Send a teleport request to a player
 - `/tpa [target]`: Accept a teleport request from a player
+
+## How to install
+
+1. Have a Spigot or Paper Minecraft Server
+2. Download the latest release from the releases tab
+3. Place the downloaded .jar into your server's `/plugins` folder
+4. Restart/reload your sever
+5. Edit the config files in `/plugins/CxWar/`
+6. Restart your server
