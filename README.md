@@ -1,4 +1,6 @@
-<img src="./src/main/resources/icon.png" alt="Icon" height="150" />
+<div align="center">
+  <img src="./src/main/resources/icon.png" alt="Icon" height="250" />
+</div>
 
 #
 A personal plugin used on my own server. Doesn't offer too much customizability but is a good starting point if you want a similar plugin.
