@@ -79,6 +79,10 @@ public class Storage {
                 config.set("death.timeout_duration", 300);
             }
 
+            if (!config.isSet("websocket.enabled")) {
+                config.set("websocket.enabled", false);
+            }
+
             config.save(config_file);
             data.save(data_file);
         } catch (IOException ex) {

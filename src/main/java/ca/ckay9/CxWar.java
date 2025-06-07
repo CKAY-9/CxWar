@@ -67,13 +67,15 @@ public class CxWar extends JavaPlugin {
         // Misc
         this.getServer().getPluginCommand("cxwar").setExecutor(new CxWarCommand());
 
-        try {
-            int port = 8887;
-            this.socket_server = new SocketServer(port);
-            this.socket_server.start();
-            this.getLogger().info("Started socket server on port " + port);
-        } catch (UnknownHostException exception) {
-            this.getLogger().warning("Failed to start socket server: " + exception.getMessage());
+        if (Storage.config.getBoolean("websocket.enabled", false)) {
+            try {
+                int port = 8887;
+                this.socket_server = new SocketServer(port);
+                this.socket_server.start();
+                this.getLogger().info("Started socket server on port " + port);
+            } catch (UnknownHostException exception) {
+                this.getLogger().warning("Failed to start socket server: " + exception.getMessage());
+            }
         }
     }
 
