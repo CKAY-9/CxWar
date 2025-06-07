@@ -17,11 +17,9 @@ import ca.ckay9.CxWar;
 import ca.ckay9.Utils;
 
 public class HiddenCommand implements CommandExecutor {
-    private CxWar cx_war;
     private HashMap<UUID, HiddenPlayer> hidden_players;
 
     public HiddenCommand(CxWar cx_war) {
-        this.cx_war = cx_war;
         if (!Storage.config.getBoolean("hidden.enabled", true)) {
             return;
         }

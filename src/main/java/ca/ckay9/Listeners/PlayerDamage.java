@@ -22,16 +22,20 @@ public class PlayerDamage implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void combatLogHandler(EntityDamageByEntityEvent event) {
+        if (!Storage.config.getBoolean("combat_logging.enabled", true)) {
+            return;
+        }
+
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
-        if (!Storage.config.getBoolean("tp.enabled", true)) {
+        if (!(event.getDamager() instanceof Player)) {
             return;
         }
 
-        int log_time = Storage.config.getInt("tp.combat_log_time", 300);
-        HashMap<UUID, Integer> logs = this.cx_war.teleports.combat_logs;
+        int log_time = Storage.config.getInt("combat_logging.duration", 30);
+        HashMap<UUID, Integer> logs = this.cx_war.combat_logs;
 
         Player player = (Player)event.getEntity();
         UUID player_uuid = player.getUniqueId();
@@ -39,17 +43,13 @@ public class PlayerDamage implements Listener {
             player.sendMessage(Utils.formatText("&cYou have been combat logged for &c&l" + log_time + "s"));
         }
 
-        cx_war.teleports.combat_logs.put(player_uuid, log_time);
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
-
+        cx_war.combat_logs.put(player_uuid, log_time);
         Player damager = (Player)event.getDamager();
         UUID damager_uuid = damager.getUniqueId();
         if (logs.get(damager_uuid) == null || logs.get(damager_uuid) == 0) {
             player.sendMessage(Utils.formatText("&cYou have been combat logged for &c&l" + log_time + "s"));
         }
 
-        cx_war.teleports.combat_logs.put(damager_uuid, log_time);
+        cx_war.combat_logs.put(damager_uuid, log_time);
     }
 }

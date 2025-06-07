@@ -1,8 +1,14 @@
 package ca.ckay9;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.ckay9.Commands.CxWarCommand;
@@ -24,27 +30,64 @@ import ca.ckay9.Listeners.PlayerLeave;
 
 public class CxWar extends JavaPlugin {
     public HiddenCommand hidden;
-    public SocketServer socket_server;
     public ArrayList<Group> groups;
     public Killstreaks killstreaks;
     public Teleports teleports;
+    public HashMap<UUID, Integer> combat_logs;
+    public HashSet<UUID> die_on_leave;
 
     @Override
     public void onEnable() {
         Storage.initializeData();
 
+        // Combat Logs
+        if (Storage.config.getBoolean("combat_logging.enabled", true)) {
+            this.combat_logs = new HashMap<>();
+            if (Storage.config.getBoolean("combat_logging.die_if_leave", true)) {
+                this.die_on_leave = new HashSet<>();
+                ConfigurationSection dol = Storage.data.getConfigurationSection("dol");
+                if (dol != null) {
+                    for (String key : dol.getKeys(false)) {
+                        if (dol.getBoolean(key)) {
+                            die_on_leave.add(UUID.fromString(key));
+                        }
+                    }
+                }
+            }
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                combat_logs.put(player.getUniqueId(), 5);
+            }
+
+            this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    for (Entry<UUID, Integer> entry : combat_logs.entrySet()) {
+                        if (entry.getValue() > 0) {
+                            combat_logs.put(entry.getKey(), entry.getValue() - 1);
+                        }
+                    }
+                }
+            }, 0, 20L);
+        }
+
+        // Listeners
+        this.getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
+
+
         // Teleports
         if (Storage.config.getBoolean("tp.enabled", true)) {
             this.teleports = new Teleports(this);
         }
-        this.getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
         this.getServer().getPluginCommand("tpr").setExecutor(new TPRCommand(this));
         this.getServer().getPluginCommand("tpa").setExecutor(new TPACommand(this));
         this.getServer().getPluginCommand("tpa").setTabCompleter(new TPACompleter(this));
 
         // Reveal
         this.getServer().getPluginCommand("reveal").setExecutor(new RevealCommand(this));
-        this.getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
 
         // Hidden
         this.hidden = new HiddenCommand(this);
@@ -57,13 +100,11 @@ public class CxWar extends JavaPlugin {
         }
         this.getServer().getPluginCommand("group").setExecutor(new GroupCommand(this));
         this.getServer().getPluginCommand("group").setTabCompleter(new GroupCompleter(this));
-        this.getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
 
         // Killstreaks
         if (Storage.config.getBoolean("killstreaks.enabled", true)) {
             this.killstreaks = new Killstreaks(this);
         }
-        this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
         this.getServer().getPluginCommand("killstreak").setExecutor(new KillstreakCommand(this));
 
         // Whispers
@@ -72,27 +113,15 @@ public class CxWar extends JavaPlugin {
 
         // Misc
         this.getServer().getPluginCommand("cxwar").setExecutor(new CxWarCommand());
-
-        if (Storage.config.getBoolean("websocket.enabled", false)) {
-            try {
-                int port = 8887;
-                this.socket_server = new SocketServer(port);
-                this.socket_server.start();
-                this.getLogger().info("Started socket server on port " + port);
-            } catch (UnknownHostException exception) {
-                this.getLogger().warning("Failed to start socket server: " + exception.getMessage());
-            }
-        }
     }
 
     @Override
     public void onDisable() {
-        try {
-            if (this.socket_server != null) {
-                this.socket_server.stop();
-            }
-        } catch (InterruptedException exception) {
-            this.getLogger().warning("Failed to stop socket server: " + exception.getMessage());
+        if (Storage.config.getBoolean("combat_logging.enabled", true)) {
+            this.combat_logs.clear();
+        }
+        if (Storage.config.getBoolean("combat_logging.die_if_leave", true)) {
+            this.die_on_leave.clear();
         }
     }
 }

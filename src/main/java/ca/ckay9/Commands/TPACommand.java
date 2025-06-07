@@ -13,13 +13,13 @@ import ca.ckay9.Storage;
 import ca.ckay9.Teleports;
 import ca.ckay9.Utils;
 
-public class TPACommand implements CommandExecutor{
+public class TPACommand implements CommandExecutor {
     private CxWar cx_war;
 
     public TPACommand(CxWar cx_war) {
         this.cx_war = cx_war;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -37,16 +37,17 @@ public class TPACommand implements CommandExecutor{
                     Utils.formatText("&cInvalid tpa usage: /tpa [player]"));
             return false;
         }
-        
-        Integer personal_combat_log = this.cx_war.teleports.combat_logs.get(player.getUniqueId());
-        if (personal_combat_log != null && personal_combat_log > 1) {
-            player.sendMessage(
-                    Utils.formatText("&cCombat logged for &c&l" + personal_combat_log + "s"));
-            return false;
-        } else {
-            this.cx_war.teleports.combat_logs.put(player.getUniqueId(), 0);
-        }
 
+        if (Storage.config.getBoolean("combat_logging.enabled", true)) {
+            Integer personal_combat_log = this.cx_war.combat_logs.get(player.getUniqueId());
+            if (personal_combat_log != null && personal_combat_log > 1) {
+                player.sendMessage(
+                        Utils.formatText("&cCombat logged for &c&l" + personal_combat_log + "s"));
+                return false;
+            } else {
+                this.cx_war.combat_logs.put(player.getUniqueId(), 0);
+            }
+        }
 
         String target_name = args[0];
         Player target_player = Bukkit.getPlayerExact(target_name);
@@ -62,14 +63,16 @@ public class TPACommand implements CommandExecutor{
             return false;
         }
 
-        Integer target_combat_log = this.cx_war.teleports.combat_logs.get(target_player.getUniqueId());
-        if (target_combat_log != null && target_combat_log > 1) {
-            player.sendMessage(
-                Utils.formatText("&cTarget is combat logged for &c&l" + target_combat_log + "s"));
+        if (Storage.config.getBoolean("combat_logging.enabled", true)) {
+            Integer target_combat_log = this.cx_war.combat_logs.get(target_player.getUniqueId());
+            if (target_combat_log != null && target_combat_log > 1) {
+                player.sendMessage(
+                        Utils.formatText("&cTarget is combat logged for &c&l" + target_combat_log + "s"));
 
-            return false;
-        } else {
-            this.cx_war.teleports.combat_logs.put(target_player.getUniqueId(), 0);
+                return false;
+            } else {
+                this.cx_war.combat_logs.put(target_player.getUniqueId(), 0);
+            }
         }
 
         UUID requesting = this.cx_war.teleports.requests.get(target_player.getUniqueId());

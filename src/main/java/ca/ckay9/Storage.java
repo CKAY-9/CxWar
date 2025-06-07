@@ -71,10 +71,6 @@ public class Storage {
                 config.set("reveal.random_chance", 25);
             }
 
-            if (!config.isSet("tp.combat_log_time")) {
-                config.set("tp.combat_log_time", 300);
-            }
-
             if (!config.isSet("tp.player_radius")) {
                 config.set("tp.player_radius", 10);
             }
@@ -91,10 +87,6 @@ public class Storage {
                 config.set("death.timeout_duration", 300);
             }
 
-            if (!config.isSet("websocket.enabled")) {
-                config.set("websocket.enabled", false);
-            }
-
             if (!config.isSet("killstreaks.enabled")) {
                 config.set("killstreaks.enabled", true);
             }
@@ -106,6 +98,18 @@ public class Storage {
             if (!config.isSet("whisper.enabled")) {
                 config.set("whisper.enabled", true);
             }
+
+            if (!config.isSet("combat_logging.enabled")) {
+                config.set("combat_logging.enabled", true);
+            }
+
+            if (!config.isSet("combat_logging.duration")) {
+                config.set("combat_logging.duration", 30);
+            }  
+            
+            if (!config.isSet("combat_logging.die_if_leave")) {
+                config.set("combat_logging.die_if_leave", true);
+            }        
 
             config.save(config_file);
             data.save(data_file);

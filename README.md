@@ -11,6 +11,7 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 - Hidden: Hide from potential reveals
 - Group: Create a group with others
 - Killstreaks: Keep track of how many players you've killed in a life and get rewards (rewards not added yet)
+- Whispher: Talk to others
 
 ### Commands
 - `/reveal [target]`: Reveal a target's location with a cooldown
@@ -20,6 +21,3 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 - `/whisper [target] [message]`: Secretly chat with other players
 - `/tpr [target]`: Send a teleport request to a player
 - `/tpa [target]`: Accept a teleport request from a player
-
-### Websocket Server
-CxWar is also a websocket server to allow for a Discord bot and website interaction.

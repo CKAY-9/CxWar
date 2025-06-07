@@ -216,6 +216,9 @@ public class Group {
     }
 
     public static Group getPlayerGroup(UUID player_uuid, ArrayList<Group> groups) {
+        if (!Storage.config.getBoolean("groups.enabled", true)) {
+            return null;
+        }
         for (Group group : groups) {
             if (group.isPlayerInGroup(player_uuid)) {
                 return group;
