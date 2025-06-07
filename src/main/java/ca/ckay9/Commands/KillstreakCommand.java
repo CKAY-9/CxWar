@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Storage;
 import ca.ckay9.Utils;
 
 public class KillstreakCommand implements CommandExecutor {
@@ -18,6 +19,11 @@ public class KillstreakCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!Storage.config.getBoolean("killstreaks.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lKillstreaks &r&care disabled on this server"));
+            return false;
+        }
+
         switch (args.length) {
             case 1:
                 String target_name = args[0];

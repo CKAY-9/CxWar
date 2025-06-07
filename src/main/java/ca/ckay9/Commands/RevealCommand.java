@@ -21,6 +21,11 @@ public class RevealCommand implements CommandExecutor {
 
     public RevealCommand(CxWar cx_war) {
         this.cx_war = cx_war;
+
+        if (!Storage.config.getBoolean("reveal.enabled", true)) {
+            return;
+        }
+
         this.reveal_cooldowns = new HashMap<>();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -52,6 +57,11 @@ public class RevealCommand implements CommandExecutor {
             return false;
         }
 
+        if (!Storage.config.getBoolean("reveal.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lReveal &r&cis disabled on this server"));
+            return false;
+        }
+
         Player player = (Player) sender;
         if (args.length <= 0) {
             player.sendMessage(Utils.formatText("&cInvalid target user: /reveal [PLAYER_NAME]"));
@@ -63,12 +73,6 @@ public class RevealCommand implements CommandExecutor {
         if (target_player == null) {
             player.sendMessage(Utils.formatText("&cInvalid target user: /reveal [PLAYER_NAME]"));
             return false;
-        }
-
-        HiddenPlayer target_hidden = this.cx_war.hidden.getHiddenPlayers().get(target_player.getUniqueId());
-        if (target_hidden == null) {
-            target_hidden = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
-            this.cx_war.hidden.addToHiddenPlayers(player.getUniqueId(), target_hidden);
         }
 
         if (reveal_cooldowns.get(player.getUniqueId()) == null) {
@@ -103,28 +107,44 @@ public class RevealCommand implements CommandExecutor {
         int y_offset = rand.nextInt(-half_offset, half_offset);
         int z_offset = rand.nextInt(-offset, offset);
 
-        switch (target_hidden.type) {
-            case 0:
-                Bukkit.broadcastMessage(
-                        Utils.formatText("&9&l" + target_player.getName() + "&r&9's location has been leaked by &9&l"
-                                + player.getName() + "&r&9: &9&l" + (target_location.getBlockX() + x_offset) + ", "
-                                + (target_location.getBlockY() + y_offset) + ", "
-                                + (target_location.getBlockZ() + z_offset)));
-                break;
-            case 1:
-                Bukkit.broadcastMessage(
-                        Utils.formatText("&9&l" + target_player.getName() + "&r&9's location has been leaked by &9&l"
-                                + player.getName() + "&r&9: &9&l" + (player_location.getBlockX() + x_offset) + ", "
-                                + (player_location.getBlockY() + y_offset) + ", "
-                                + (player_location.getBlockZ() + z_offset)));
-                break;
-            case 2:
-                Bukkit.broadcastMessage(
-                        Utils.formatText("&9&l" + player.getName()
-                                + " &r&9revealed their own position: &9&l" + player_location.getBlockX() + ", "
-                                + player_location.getBlockY() + ", " + player_location.getBlockZ()));
-            default:
-                break;
+        if (Storage.config.getBoolean("hidden.enabled", true)) {
+            HiddenPlayer target_hidden = this.cx_war.hidden.getHiddenPlayers().get(target_player.getUniqueId());
+            if (target_hidden == null) {
+                target_hidden = new HiddenPlayer(0, Storage.config.getInt("hidden.timer", 360));
+                this.cx_war.hidden.addToHiddenPlayers(player.getUniqueId(), target_hidden);
+            }
+
+            switch (target_hidden.type) {
+                case 0:
+                    Bukkit.broadcastMessage(
+                            Utils.formatText("&9&l" + target_player.getName()
+                                    + "&r&9's location has been leaked by &9&l"
+                                    + player.getName() + "&r&9: &9&l" + (target_location.getBlockX() + x_offset) + ", "
+                                    + (target_location.getBlockY() + y_offset) + ", "
+                                    + (target_location.getBlockZ() + z_offset)));
+                    break;
+                case 1:
+                    Bukkit.broadcastMessage(
+                            Utils.formatText("&9&l" + target_player.getName()
+                                    + "&r&9's location has been leaked by &9&l"
+                                    + player.getName() + "&r&9: &9&l" + (player_location.getBlockX() + x_offset) + ", "
+                                    + (player_location.getBlockY() + y_offset) + ", "
+                                    + (player_location.getBlockZ() + z_offset)));
+                    break;
+                case 2:
+                    Bukkit.broadcastMessage(
+                            Utils.formatText("&9&l" + player.getName()
+                                    + " &r&9revealed their own position: &9&l" + player_location.getBlockX() + ", "
+                                    + player_location.getBlockY() + ", " + player_location.getBlockZ()));
+                default:
+                    break;
+            }
+        } else {
+            Bukkit.broadcastMessage(
+                    Utils.formatText("&9&l" + target_player.getName() + "&r&9's location has been leaked by &9&l"
+                            + player.getName() + "&r&9: &9&l" + (target_location.getBlockX() + x_offset) + ", "
+                            + (target_location.getBlockY() + y_offset) + ", "
+                            + (target_location.getBlockZ() + z_offset)));
         }
 
         // Update cooldown

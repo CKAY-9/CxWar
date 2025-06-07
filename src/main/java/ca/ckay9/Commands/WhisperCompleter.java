@@ -16,7 +16,9 @@ public class WhisperCompleter implements TabCompleter {
         switch (args.length) {
             case 1:
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    options.add(p.getName());
+                    if (p.getName().toLowerCase().contains(args[0].toLowerCase())) {
+                        options.add(p.getName());
+                    }
                 }
                 break;
             case 2:

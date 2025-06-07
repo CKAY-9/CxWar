@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Storage;
 import ca.ckay9.Teleports;
 import ca.ckay9.Utils;
 
@@ -23,10 +24,15 @@ public class TPRCommand implements CommandExecutor {
             return false;
         }
 
+        if (!Storage.config.getBoolean("tp.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lTPR &r&cis disabled on this server"));
+            return false;
+        }
+
         Player player = (Player) sender;
         if (args.length <= 0) {
             player.sendMessage(
-                    Utils.formatText("&cInvalid tpa usage: /tpa [player]"));
+                    Utils.formatText("&cInvalid tpr usage: /tpr [player]"));
             return false;
         }
 

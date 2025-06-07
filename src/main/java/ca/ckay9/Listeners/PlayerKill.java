@@ -27,7 +27,7 @@ public class PlayerKill implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void deathPunishmenet(PlayerDeathEvent event) {
-        if (!Storage.config.getBoolean("death.timeout_on_death", true)) {
+        if (!Storage.config.getBoolean("death.timeout_enabled", true)) {
             return;
         }
 
@@ -47,7 +47,11 @@ public class PlayerKill implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerKill(PlayerDeathEvent event) {
+    public void killstreakHandler(PlayerDeathEvent event) {
+        if (!Storage.config.getBoolean("killstreaks.enabled", true)) {
+            return;
+        }
+
         Player dead_player = event.getEntity();
         if (!(dead_player.getKiller() instanceof Player)) {
             return;

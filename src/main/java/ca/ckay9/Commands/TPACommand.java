@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Storage;
 import ca.ckay9.Teleports;
 import ca.ckay9.Utils;
 
@@ -22,6 +23,11 @@ public class TPACommand implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
+            return false;
+        }
+
+        if (!Storage.config.getBoolean("tp.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lTPA &r&cis disabled on this server"));
             return false;
         }
 
@@ -67,7 +73,7 @@ public class TPACommand implements CommandExecutor{
         }
 
         UUID requesting = this.cx_war.teleports.requests.get(target_player.getUniqueId());
-        if (requesting == null) {
+        if (requesting == null || !requesting.equals(player.getUniqueId())) {
             player.sendMessage(
                     Utils.formatText("&cUnable to find target request"));
             return false;

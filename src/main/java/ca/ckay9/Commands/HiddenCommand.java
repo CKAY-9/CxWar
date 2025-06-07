@@ -22,6 +22,10 @@ public class HiddenCommand implements CommandExecutor {
 
     public HiddenCommand(CxWar cx_war) {
         this.cx_war = cx_war;
+        if (!Storage.config.getBoolean("hidden.enabled", true)) {
+            return;
+        }
+        
         this.hidden_players = new HashMap<>();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -188,6 +192,11 @@ public class HiddenCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
+            return false;
+        }
+
+        if (!Storage.config.getBoolean("hidden.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lHidden &r&cis disabled on this server"));
             return false;
         }
 

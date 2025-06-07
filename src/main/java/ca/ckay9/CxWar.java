@@ -34,7 +34,9 @@ public class CxWar extends JavaPlugin {
         Storage.initializeData();
 
         // Teleports
-        this.teleports = new Teleports(this);
+        if (Storage.config.getBoolean("tp.enabled", true)) {
+            this.teleports = new Teleports(this);
+        }
         this.getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
         this.getServer().getPluginCommand("tpr").setExecutor(new TPRCommand(this));
         this.getServer().getPluginCommand("tpa").setExecutor(new TPACommand(this));
@@ -50,13 +52,17 @@ public class CxWar extends JavaPlugin {
         this.getServer().getPluginCommand("hidden").setTabCompleter(new HiddenCompleter(this));
 
         // Group
-        this.groups = Group.loadAllGroups();
+        if (Storage.config.getBoolean("groups.enabled", true)) {
+            this.groups = Group.loadAllGroups();
+        }
         this.getServer().getPluginCommand("group").setExecutor(new GroupCommand(this));
         this.getServer().getPluginCommand("group").setTabCompleter(new GroupCompleter(this));
         this.getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
 
         // Killstreaks
-        this.killstreaks = new Killstreaks(this);
+        if (Storage.config.getBoolean("killstreaks.enabled", true)) {
+            this.killstreaks = new Killstreaks(this);
+        }
         this.getServer().getPluginManager().registerEvents(new PlayerKill(this), this);
         this.getServer().getPluginCommand("killstreak").setExecutor(new KillstreakCommand(this));
 

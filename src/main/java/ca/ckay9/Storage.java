@@ -43,6 +43,14 @@ public class Storage {
                 config.set("reveal.cooldown", 180);
             }
 
+            if (!config.isSet("reveal.enabled")) {
+                config.set("reveal.enabled", true);
+            }
+
+            if (!config.isSet("hidden.enabled")) {
+                config.set("hidden.enabled", true);
+            }
+
             if (!config.isSet("hidden.timer")) {
                 config.set("hidden.timer", 360);
             }
@@ -71,8 +79,12 @@ public class Storage {
                 config.set("tp.player_radius", 10);
             }
 
-            if (!config.isSet("death.timeout_on_death")) {
-                config.set("death.timeout_on_death", true);
+            if (!config.isSet("tp.enabled")) {
+                config.set("tp.enabled", true);
+            }
+
+            if (!config.isSet("death.timeout_enabled")) {
+                config.set("death.timeout_enabled", true);
             }
 
             if (!config.isSet("death.timeout_duration")) {
@@ -81,6 +93,18 @@ public class Storage {
 
             if (!config.isSet("websocket.enabled")) {
                 config.set("websocket.enabled", false);
+            }
+
+            if (!config.isSet("killstreaks.enabled")) {
+                config.set("killstreaks.enabled", true);
+            }
+
+            if (!config.isSet("groups.enabled")) {
+                config.set("groups.enabled", true);
+            }
+
+            if (!config.isSet("whisper.enabled")) {
+                config.set("whisper.enabled", true);
             }
 
             config.save(config_file);

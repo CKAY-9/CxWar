@@ -18,15 +18,10 @@ public class PlayerLeave implements Listener {
     public PlayerLeave(CxWar cx_war) {
         this.cx_war = cx_war;
     }
-    
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
 
-        if (this.cx_war.teleports.requests.get(player.getUniqueId()) != null) {
-            this.cx_war.teleports.requests.remove(player.getUniqueId());
-        }
-        
+    @EventHandler
+    public void saveLocation(PlayerQuitEvent event) {
+        Player player = event.getPlayer();     
         try {
             Location loc = player.getLocation();
             Storage.data.set("logoff_locations." + player.getUniqueId() + ".name", player.getName());
@@ -39,5 +34,18 @@ public class PlayerLeave implements Listener {
         } catch (IOException exception) {
             exception.printStackTrace();
         } 
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void removeTeleport(PlayerQuitEvent event) {
+        if (!Storage.config.getBoolean("tp.enabled", true)) {
+            return;
+        }
+        
+        Player player = event.getPlayer();
+
+        if (this.cx_war.teleports.requests.get(player.getUniqueId()) != null) {
+            this.cx_war.teleports.requests.remove(player.getUniqueId());
+        }
     } 
 }

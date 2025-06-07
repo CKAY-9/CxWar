@@ -2,6 +2,8 @@ package ca.ckay9;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -16,6 +18,17 @@ public class Group {
     public static String[] possible_colors = {
             "&6", "&1", "&9", "&a", "&c", "&e", "&5", "&0", "&f"
     };
+    public static Map<String, String> convert_color_to_minecraft = new HashMap<String, String>() {{
+        put("gold", possible_colors[0]);
+        put("darkblue", possible_colors[1]);
+        put("blue", possible_colors[2]);
+        put("green", possible_colors[3]);
+        put("red", possible_colors[4]);
+        put("yellow", possible_colors[5]);
+        put("darkpurple", possible_colors[6]);
+        put("black", possible_colors[7]);
+        put("white", possible_colors[8]);
+    }};
     public String color = "&6";
 
     public Group(UUID creator, String name, ArrayList<UUID> uuids, String color) {
@@ -151,6 +164,19 @@ public class Group {
 
             temp.sendMessage(Utils.formatText("&a" + player.getName() + " is now online."));
         }
+    }
+
+    public void kickPlayer(Player target_player) {
+        for (int i = 0; i < this.members.size(); i++) {
+            UUID temp = this.members.get(i);
+            if (temp.equals(target_player.getUniqueId())) {
+                this.members.remove(i);
+                break;
+            }
+        }
+
+        this.saveGroup();
+        target_player.sendMessage(Utils.formatText("&cYou have been kicked from &c&l" + this.name));
     }
 
     public static ArrayList<Group> loadAllGroups() {

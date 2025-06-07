@@ -21,8 +21,12 @@ public class PlayerDamage implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+    public void combatLogHandler(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        if (!Storage.config.getBoolean("tp.enabled", true)) {
             return;
         }
 

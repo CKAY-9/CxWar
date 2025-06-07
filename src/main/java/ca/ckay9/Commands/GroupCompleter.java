@@ -3,6 +3,7 @@ package ca.ckay9.Commands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,6 +40,8 @@ public class GroupCompleter implements TabCompleter {
                     if (current_group.creator.equals(player.getUniqueId())) {
                         options.add("delete");
                         options.add("invite");
+                        options.add("kick");
+                        options.add("color");
                     } else {
                         options.add("leave");
                     }
@@ -49,10 +52,34 @@ public class GroupCompleter implements TabCompleter {
                     case "create":
                         options.add("name");
                         break;
+                    case "kick":
+                        if (current_group == null  || !current_group.creator.equals(player.getUniqueId())) {
+                            break;
+                        }
+                        for (UUID uuid : current_group.members) {
+                            Player member = Bukkit.getPlayer(uuid);
+                            if (player == null) {
+                                continue;
+                            }
+
+                            options.add(member.getName());
+                        }
+                        break;
+                    case "color":
+                        if (current_group == null  || !current_group.creator.equals(player.getUniqueId())) {
+                            break;
+                        }
+                        for (String color : Group.convert_color_to_minecraft.keySet()) {
+                            options.add(color);
+                        }
+                        break;
                     case "join":
                         options.addAll(Group.getGroupsInvitedTo(player.getUniqueId(), this.cx_war.groups));
                         break;
                     case "invite":
+                        if (current_group == null  || !current_group.creator.equals(player.getUniqueId())) {
+                            break;
+                        }
                         for (Player temp_player : Bukkit.getOnlinePlayers()) {
                             options.add(temp_player.getName());
                         }

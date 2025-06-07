@@ -12,6 +12,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
+import ca.ckay9.Storage;
 
 public class TPACompleter implements TabCompleter {
     private CxWar cx_war;
@@ -24,6 +25,10 @@ public class TPACompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         ArrayList<String> options = new ArrayList<>();
         if (!(sender instanceof Player)) {
+            return options;
+        }
+
+        if (!Storage.config.getBoolean("tp.enabled", true)) {
             return options;
         }
 

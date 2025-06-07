@@ -6,13 +6,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ca.ckay9.Storage;
 import ca.ckay9.Utils;
 
 public class WhisperCommand implements CommandExecutor {
-    
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!Storage.config.getBoolean("whisper.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lWhisper &r&cis disabled on this server"));
+            return false;
+        }
+
         if (args.length < 2) {
             sender.sendMessage(Utils.formatText("&c Invalid whisper usage: /whisper [name] [message]"));
             return false;
@@ -29,7 +34,7 @@ public class WhisperCommand implements CommandExecutor {
 
         player.sendMessage(Utils.formatText("&7" + sender.getName() + " whispered to you: " + message));
         sender.sendMessage(Utils.formatText("&7Whispered to " + player.getName() + ": " + message));
-        
+
         return false;
     }
 }

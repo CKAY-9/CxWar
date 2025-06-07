@@ -15,7 +15,7 @@ A personal plugin used on my own server. Doesn't offer too much customizability 
 ### Commands
 - `/reveal [target]`: Reveal a target's location with a cooldown
 - `/hidden [start/end] [diamond/netherite]`: Protect yourself from reveals using diamonds and netherite
-- `/group [create/join/invite/delete/leave] [name]`: Create, join, leave, etc., groups
+- `/group [create/join/leave, invite/delete/kick/color] [name]`: Create, join, leave, etc., groups
 - `/killstreak [target]`: See your own or other's current killstreak
 - `/whisper [target] [message]`: Secretly chat with other players
 - `/tpr [target]`: Send a teleport request to a player

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import ca.ckay9.CxWar;
 import ca.ckay9.Group;
+import ca.ckay9.Storage;
 import ca.ckay9.Utils;
 
 public class GroupCommand implements CommandExecutor {
@@ -129,10 +130,98 @@ public class GroupCommand implements CommandExecutor {
             return;
         }
 
+        if (target_player.getUniqueId().equals(player.getUniqueId())) {
+            player.sendMessage(
+                    Utils.formatText("&cYou can't invite yourself"));
+            return;
+        }
+
         target_player.sendMessage(Utils.formatText(
                 "&aYou have been invited to " + group.name + ". Type /group join " + group.name + " to join"));
         player.sendMessage(Utils.formatText("&aInvited " + target_player_name + " to your group."));
         group.invitePlayerToGroup(target_player.getUniqueId());
+    }
+
+    private void changeGroupColor(Player player, Group group, String[] args) {
+        if (!player.getUniqueId().equals(group.creator)) {
+            player.sendMessage(
+                    Utils.formatText("&cOnly group owners can change group color."));
+            return;
+        }
+        
+        if (args.length < 2) {
+            player.sendMessage(
+                    Utils.formatText("&cInvalid group usage: /group color [color]"));
+            return;
+        }
+
+        String color = args[1].toLowerCase().strip();
+        String mc_color = Group.convert_color_to_minecraft.get(color);
+        if (mc_color == null) {
+            player.sendMessage(
+                    Utils.formatText("&cInvalid group usage: /group color [color]"));
+            return;
+        }
+
+        for (UUID uuid : group.members) {
+            Player member = Bukkit.getPlayer(uuid);
+            if (member == null) {
+                continue;
+            }
+
+            Group.resetPlayerNames(member);
+        }
+
+        group.color = mc_color;
+        group.saveGroup();
+
+        for (UUID uuid : group.members) {
+            Player member = Bukkit.getPlayer(uuid);
+            if (member == null) {
+                continue;
+            }
+
+            group.setupPlayerForGroup(member);
+        }
+
+        player.sendMessage(
+            Utils.formatText("&aUpdated group color to " + mc_color + "&l" + color));
+    }
+
+    private void kickPlayerFromGroup(Player player, Group group, String[] args) {
+        if (!player.getUniqueId().equals(group.creator)) {
+            player.sendMessage(
+                    Utils.formatText("&cOnly group owners can change group color."));
+            return;
+        }
+        
+        if (args.length < 2) {
+            player.sendMessage(
+                    Utils.formatText("&cInvalid group usage: /group kick [name]"));
+            return;
+        }
+
+        String target_name = args[1];
+        Player target_player = Bukkit.getPlayerExact(target_name);
+        if (target_player == null) {
+            player.sendMessage(
+                    Utils.formatText("&cPlayer must be online to be kicked"));
+            return;
+        }
+
+        if (target_player.getUniqueId().equals(player.getUniqueId())) {
+            player.sendMessage(
+                    Utils.formatText("&cYou can't kick yourself"));
+            return;
+        }
+        
+        if (!group.isPlayerInGroup(target_player.getUniqueId())) {
+            player.sendMessage(
+                    Utils.formatText("&cPlayer must in your group to be kicked"));
+            return;
+        }
+
+        group.kickPlayer(target_player);
     }
 
     @Override
@@ -141,10 +230,15 @@ public class GroupCommand implements CommandExecutor {
             return false;
         }
 
+        if (!Storage.config.getBoolean("groups.enabled", true)) {
+            sender.sendMessage(Utils.formatText("&c&lGroups &r&care disabled on this server"));
+            return false;
+        }
+
         Player player = (Player) sender;
         if (args.length <= 0) {
             player.sendMessage(
-                    Utils.formatText("&cInvalid group usage: /group [create/join/leave/delete/invite] [name]"));
+                    Utils.formatText("&cInvalid group usage: /group [create/join/leave, delete/invite/kick/color]"));
             return false;
         }
 
@@ -152,6 +246,22 @@ public class GroupCommand implements CommandExecutor {
 
         String action = args[0];
         switch (action.strip().toLowerCase()) {
+            case "color":
+                if (current_group == null || !current_group.creator.equals(player.getUniqueId())) {
+                    player.sendMessage(Utils.formatText("&cYou aren't the owner of a group."));
+                    return false;
+                }
+
+                changeGroupColor(player, current_group, args);
+                break;
+            case "kick":
+                if (current_group == null || !current_group.creator.equals(player.getUniqueId())) {
+                    player.sendMessage(Utils.formatText("&cYou aren't the owner of a group."));
+                    return false;
+                }
+
+                kickPlayerFromGroup(player, current_group, args);
+                break;
             case "create":
                 if (current_group != null) {
                     player.sendMessage(
@@ -179,8 +289,8 @@ public class GroupCommand implements CommandExecutor {
                 leaveGroup(player);
                 break;
             case "delete":
-                if (current_group == null) {
-                    player.sendMessage(Utils.formatText("&cYou aren't in a group."));
+                if (current_group == null || !current_group.creator.equals(player.getUniqueId())) {
+                    player.sendMessage(Utils.formatText("&cYou aren't the owner of a group."));
                     return false;
                 }
 
