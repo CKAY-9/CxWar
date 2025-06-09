@@ -23,6 +23,10 @@ public class Teleports {
                 continue;
             }
 
+            if (!other_player.getWorld().getName().equals(player.getWorld().getName())) {
+                continue;
+            }
+
             if (group != null && group.isPlayerInGroup(other_player.getUniqueId())) {
                 continue;
             }
